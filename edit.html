@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Edit</title>
+		<link rel="stylesheet" type="text/css" href="http://tiddlyspace.com/bags/mosaic_public/tiddlers/bootvelcro.css">
+		<link rel="stylesheet" type="text/css" href="edit.css">
+	</head>
+	<body>
+		<div class="controls nav nav-list">
+			<div class="well type">
+				<ul class="nav nav-list">
+					<li class="active"><a data-type="" href="javascript:;">Default</a></li>
+					<li><a data-type="text/x-markdown" href="javascript:;">Markdown</a></li>
+					<li><a data-type="text/html" href="javascript:;">HTML</a></li>
+					<li><a data-type="text/javascript" href="javascript:;">JavaScript</a></li>
+					<li><a data-type="text/css" href="javascript:;">CSS</a></li>
+					<li><a data-type="text/plain" href="javascript:;">Plain Text</a></li>
+				</ul>
+			</div>
+
+			<label>
+				<input class="private" type="checkbox"> <span>Keep Private</span>
+			</label>
+
+			<button class="save btn success large">save</button>
+			<button class="cancel btn large">cancel</button>
+			<button class="delete btn large danger">delete</button>
+		</div>
+
+		<div class="editor">
+			<input class="title">
+			<textarea class="text"></textarea>
+			<input class="tags">
+		</div>
+
+		<ul class="popup">
+		</ul>
+
+		<script src="http://tiddlyspace.com/bags/common/tiddlers/jquery.js"></script>
+		<script src="http://tiddlyspace.com/bags/benspa_public/tiddlers/moment.min.js"></script>
+		<script src="http://tiddlyspace.com/bags/benspa_public/tiddlers/textarea-helper.js"></script>
+		<script src="http://tiddlyspace.com/bags/tiddlyspace/tiddlers/chrjs"></script>
+		<script src="http://tiddlyspace.com/bags/common/tiddlers/chrjs-store.js"></script>
+		<script src="http://tiddlyspace.com/bags/mosaic_public/tiddlers/fp.js"></script>
+		<script src="edit.js"></script>
+	</body>
+</html>

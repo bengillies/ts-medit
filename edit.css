@@ -1,0 +1,86 @@
+html,
+body {
+	height: 100%;
+	background-color: #f5f4f0;
+}
+
+.controls {
+	float: left;
+	height: 100%;
+	width: 28%;
+	background-color: #E5E4DC;
+	border-right: 1px solid #BBA;
+	position: relative;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+}
+
+.controls .btn {
+	display: block;
+	width: 80%;
+	margin: 1em 1.5em;
+}
+
+.controls input[type="checkbox"] {
+	display: inline;
+	margin: 0.5em 0.3em 0.5em 1.65em;
+}
+
+.controls .type {
+	margin-top: 2em;
+	border: 1px solid #BBA;
+}
+
+.editor {
+	position: relative;
+	padding: 1em;
+	width: 72%;
+	float: left;
+	height: 100%;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+}
+
+.editor input,
+.editor textarea {
+	width: 95%;;
+	width: -webkit-calc(100% - 1em);
+	width: calc(100% - 1em);
+	display: block;
+}
+
+.editor input:focus,
+.editor textarea:focus {
+	border-color: #BBA;
+}
+
+.editor .title {
+	font-size: 2.8em;
+	font-weight: bold;
+	margin-bottom: 0.25em;
+	width: 95%;
+	width: -webkit-calc(100% - 0.8em);
+	width: calc(100% - 0.8em);
+}
+
+.editor .text {
+	height: 20em;
+	height: -webkit-calc(100% - 10.6em);
+	height: calc(100% - 10.6em);
+	font-size: 1.4em;
+}
+
+.editor .tags {
+	font-size: 1.4em;
+}
+
+.popup {
+	display: none;
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+
+.popup.show {
+	display: block;
+}
