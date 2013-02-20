@@ -22,8 +22,6 @@
 				<input class="private" type="checkbox"> <span>Keep Private</span>
 			</label>
 
-			<button class="save btn success large">save</button>
-			<button class="cancel btn large">cancel</button>
 			<button class="delete btn large danger">delete</button>
 		</div>
 
@@ -31,10 +29,16 @@
 			<input class="title">
 			<textarea class="text"></textarea>
 			<input class="tags">
+			<button class="save btn success large">save</button>
+			<button class="cancel btn large">cancel</button>
 		</div>
 
-		<ul class="popup">
+		<ul class="popup dropdown-menu">
 		</ul>
+
+		<div id="sandbox">
+			<div class="tags"></div>
+		</div>
 
 		<script src="http://tiddlyspace.com/bags/common/tiddlers/jquery.js"></script>
 		<script src="http://tiddlyspace.com/bags/benspa_public/tiddlers/moment.min.js"></script>

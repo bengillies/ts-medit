@@ -65,22 +65,44 @@ body {
 
 .editor .text {
 	height: 20em;
-	height: -webkit-calc(100% - 10.6em);
-	height: calc(100% - 10.6em);
+	height: -webkit-calc(100% - 13.6em);
+	height: calc(100% - 13.6em);
 	font-size: 1.4em;
 }
 
-.editor .tags {
+.tags {
 	font-size: 1.4em;
+}
+
+.editor .btn {
+	float: right;
+	width: 10em;
+	margin: 1em 0.5em;
 }
 
 .popup {
 	display: none;
 	margin: 0;
-	padding: 0;
-	list-style-type: none;
+	max-width: 20em;
+	overflow-x: hidden;
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
+	border-bottom: 1px solid #CCC;
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
 }
 
 .popup.show {
 	display: block;
+}
+
+.popup li {
+	cursor: pointer;
+}
+
+#sandbox {
+	position: fixed;
+	left: -10000px;
+	top: -10000px;
 }

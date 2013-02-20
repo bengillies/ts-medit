@@ -222,6 +222,177 @@
 		$('.editor input, .editor textarea').on('change keyup', cache);
 	}
 
+	var tagHelper = (function() {
+		var allTags = [],
+			$popup = $('.popup'),
+			$tags = $('.tags'),
+			$sandbox = $('#sandbox .tags'),
+			on = false,
+			nth = 1,
+			selecting = false,
+			tagStart, tagEnd, currTag, cursorPos;
+
+		store.refresh(function(tiddlers) {
+			allTags = fp.uniq(fp.flatten(tiddlers.map(function(t) {
+				return t.tags;
+			})));
+		});
+
+		function currentTag(tagString, cursor) {
+			var r = /^(?:\s*\[\[([^\]\]]+)|\s*([^\s]+))/g,
+				match, tag, length, pos = 0,
+				rest = tagString;
+
+			match = r.exec(rest);
+			while (match) {
+				tag = match[1] || match[2];
+				rest = rest.slice(r.lastIndex);
+				length = tag.length;
+				pos += r.lastIndex;
+				if (pos >= cursor && pos - length <= cursor) {
+					currTag = tag;
+					tagStart = pos - length;
+					tagEnd = pos;
+					if (!~['[', '[[', ']', ']]'].indexOf(tag)) {
+						return [tag, pos - length, pos];
+					} else {
+						break;
+					}
+				}
+
+				r = /^(?:\s*\[\[([^\]\]]+)|\s*([^\s]+))/g;
+				match = r.exec(rest);
+			}
+
+			return [null, null, null];
+		}
+
+		function matchTags(tagString) {
+			var matches = allTags.filter(function(tag) {
+				return !!~tag.indexOf(tagString);
+			});
+			matches = matches.slice(0, 8);
+			if (tagString) {
+				matches.push(tagString);
+			}
+			return matches;
+		}
+
+		function getLeftPos(tagString) {
+			$sandbox.text(tagString);
+			return $sandbox.outerWidth() + $tags.offset().left + 5;
+		}
+
+		function positionPopup(tagString, tagStart) {
+			$popup.css('top', $tags.position().top - $popup.outerHeight() + 1)
+				.css('left', getLeftPos(tagString.slice(0, tagStart)));
+		}
+
+		function stop() {
+			$popup.removeClass('show');
+			on = false;
+		}
+
+		function insertTag(tag) {
+			var tagString = $tags.val();
+
+			currTag = tag;
+
+			if (/\s/.test(tag) && tagString.charAt(tagStart - 1) !== '[') {
+				tag = '[[' + tag + ']]';
+			}
+
+			$tags.val(tagString.slice(0, tagStart) + tag +
+				tagString.slice(tagEnd));
+
+			tagEnd = tagStart + tag.length;
+
+			fp.nextTick(function() {
+				$tags[0].setSelectionRange(tagEnd, tagEnd);
+			});
+		}
+
+		function click(ev) {
+			var tag = $(ev.target).text();
+			insertTag(tag);
+			stop();
+		}
+
+		function arrows(ev) {
+			var newSelection;
+			if (ev.keyCode == 40) { // down
+				ev.preventDefault();
+				if (nth < $popup.find('li').length) {
+					nth++;
+					newSelection = $popup.find('li.active')
+						.removeClass('active')
+						.next('li').addClass('active');
+
+					insertTag(newSelection.text());
+				}
+				selecting = true;
+			} else if (ev.keyCode == 38) { // up
+				ev.preventDefault();
+				if (nth > 1) {
+					nth--;
+					newSelection = $popup.find('li.active')
+						.removeClass('active')
+						.prev('li').addClass('active');
+
+					insertTag(newSelection.text());
+				}
+				selecting = true;
+			} else if (ev.keyCode == 13) { // enter
+				ev.preventDefault;
+				insertTag($popup.find('li.active').text());
+				stop();
+			}
+		}
+
+		function fillCompleteList(ev) {
+			var $el = $(ev.target),
+				tagString = $el.val(),
+				cursor = ev.target.selectionStart;
+
+			if (ev.keyCode == 40 || ev.keyCode == 38) {
+				ev.preventDefault();
+			}
+
+			if (selecting) {
+				selecting = false;
+				return;
+			}
+
+			cursorPos = cursor;
+
+			var tagMatch = currentTag(tagString, cursor),
+				tag = tagMatch[0],
+				matchingTags = matchTags(tag);
+
+			if (!on && matchingTags.length) {
+				fp.nextTick(function() {
+					$popup.addClass('show');
+					positionPopup(tagString, tagMatch[1]);
+				});
+				nth = matchingTags.length;
+			} else if (matchingTags.length == 0) {
+				$popup.removeClass('show');
+				on = false;
+			}
+
+			$popup.html(matchingTags.map(function(tag) {
+				return '<li><a>' + tag + '</a></li>';
+			})).find('li:nth-child(' + nth + ')').addClass('active');
+		}
+
+		return function() {
+			$tags.on('keydown', arrows)
+				.on('keyup change', fillCompleteList)
+				.on('blur', stop);
+			$popup.on('click', 'li', click);
+		};
+	}());
+
 	$(function() {
 		var $title = $('.title');
 
@@ -232,5 +403,7 @@
 		} else {
 			populateInput('');
 		}
+
+		tagHelper();
 	}());
 }());
