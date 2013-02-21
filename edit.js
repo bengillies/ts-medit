@@ -393,6 +393,94 @@
 		};
 	}());
 
+	var dragUploader = (function() {
+		var $target = $('.text');
+
+		function textOutput(tiddler) {
+			var type = $('.type li.active a').data('type'),
+				uri = '/bags/' + tiddler.bag.name + '/tiddlers/' +
+					encodeURIComponent(tiddler.title);
+
+			switch (type) {
+				case 'text/x-markdown':
+					return '![' + tiddler.title + '](' + uri + ')';
+				case 'text/html':
+					return '<img src="' + uri + '">';
+				case 'text/javascript':
+					return '// ' + uri;
+				case 'text/css':
+					return 'url(' + uri + ')';
+				case 'text/plain':
+					return tiddler.title + ': ' + uri;
+				default:
+					return '[img[' + tiddler.title + ']]';
+			}
+		}
+
+		function insertImage(image) {
+			var cursorPos = $target[0].selectionStart,
+				startText = $target.val().slice(0, cursorPos),
+				endText = $target.val().slice(cursorPos),
+				newCursorPos;
+
+			if (!/\s$/.test(startText)) {
+				startText += ' ';
+			}
+
+			if (!/^\s/.test(endText)) {
+				endText = ' ' + endText;
+			}
+
+			$target.val(startText + image + endText);
+			newCursorPos = startText.length + image.length;
+			fp.nextTick(function() {
+				$target[0].setSelectionRange(newCursorPos, newCursorPos);
+			});
+		}
+
+		function cancelDefaults(ev) {
+			ev.preventDefault();
+			ev.stopPropagation();
+			return false;
+		}
+
+		function uploadFile(file) {
+			var name = file.name
+				bag = store.getDefaults().pushTo,
+				url = '/bags/' + bag.name + '/tiddlers/' +
+					name,
+				tiddler = new tiddlyweb.Tiddler(name);
+
+			tiddler.bag = bag;
+
+			var xhr = new XMLHttpRequest(),
+				upload = xhr.upload;
+
+			xhr.open('PUT', url, true);
+			xhr.setRequestHeader('Content-Type', file.type);
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState == 4) {
+					if (xhr.status == 204) {
+						insertImage(textOutput(tiddler));
+					}
+				}
+			};
+			xhr.send(file);
+		}
+
+		function fileDrop(ev) {
+			cancelDefaults(ev);
+			var files = ev.originalEvent.dataTransfer.files;
+			$.each(files, function(i, f) { uploadFile(f); });
+		}
+
+		return function() {
+			$target.on('dragEnter', cancelDefaults)
+				.on('dragOver', cancelDefaults)
+				.on('drop', fileDrop);
+		}
+	}());
+
 	$(function() {
 		var $title = $('.title');
 
@@ -405,5 +493,6 @@
 		}
 
 		tagHelper();
+		dragUploader();
 	}());
 }());
