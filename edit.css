@@ -77,7 +77,7 @@ body {
 .editor .btn {
 	float: right;
 	width: 10em;
-	margin: 1em 0.5em;
+	margin: 0 0.5em;
 }
 
 .popup {
