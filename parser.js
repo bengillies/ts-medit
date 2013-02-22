@@ -115,6 +115,50 @@ var parser = (function() {
 		}
 	}
 
+	function doubleBrackets(ev) {
+		function insertBrackets(next, cursor, insertCharacter) {
+			var oldText
+			if (/\s|\[|\{|\(|\]|\}|\)|\.|^$/.test(next)) {
+				oldText = $el.val();
+				$el.val(oldText.slice(0, cursor) + insertCharacter +
+					oldText.slice(cursor));
+				ev.target.setSelectionRange(cursor, cursor);
+			}
+		}
+
+		var cursor = ev.target.selectionStart,
+			txt = $el.val(),
+			current = txt.charAt(cursor);
+		switch (ev.keyCode) {
+		case 91: // [
+			insertBrackets(current, cursor, ']');
+			break;
+		case 123: // {
+			insertBrackets(current, cursor, '}');
+			break;
+		case 40: // (
+			insertBrackets(current, cursor, ')');
+			break;
+		case 93: // ]
+			if (current == ']') {
+				ev.target.setSelectionRange(++cursor, cursor);
+				ev.preventDefault();
+			}
+			break;
+		case 125: // }
+			if (current == '}') {
+				ev.target.setSelectionRange(++cursor, cursor);
+				ev.preventDefault();
+			}
+			break;
+		case 41: // )
+			if (current == ')') {
+				ev.target.setSelectionRange(++cursor, cursor);
+				ev.preventDefault();
+			}
+		}
+	}
+
 	function _insertText(pos, text) {
 		var val = $el.val();
 
@@ -172,6 +216,7 @@ var parser = (function() {
 				stop();
 			}
 		}
+
 	}
 
 	function click(ev) {
@@ -199,6 +244,7 @@ var parser = (function() {
 
 			$el.on('keydown', arrows)
 				.on('keyup change', getMatch)
+				.on('keypress', doubleBrackets)
 				.on('blur', stop);
 
 			$popup.on('click', 'li', click);
