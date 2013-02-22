@@ -269,7 +269,7 @@
 
 		function matchTags(tagString) {
 			var matches = allTags.filter(function(tag) {
-				return !!~tag.indexOf(tagString);
+				return !!~tag.toLowerCase().indexOf(tagString.toLowerCase());
 			});
 			matches = matches.slice(0, 8);
 			if (tagString) {
