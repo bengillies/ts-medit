@@ -494,5 +494,16 @@
 
 		tagHelper();
 		dragUploader();
+		parser.init(store, $('.text'));
+		$('.type li a').on('click', function(ev) {
+			var type = $(ev.target).data('type');
+
+			switch (type) {
+				case 'text/x-markdown': type = 'markdown'; break;
+				default: type = 'tiddlywiki';
+			}
+
+			parser.setType(type);
+		});
 	}());
 }());
