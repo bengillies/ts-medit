@@ -60,7 +60,12 @@ var parser = (function() {
 
 		return list.filter(function(potentialMatch) {
 			var lower = potentialMatch.toLowerCase();
-			return ~lower.indexOf(current.toLowerCase());
+			return ~lower.indexOf(current);
+		}).sort(function(a, b) {
+			var first = a.toLowerCase().indexOf(current),
+				second = b.toLowerCase().indexOf(current);
+			return first > second ? 1 : second > first ? -1 :
+				a.length < b.length ? 1 : b.length < a.length ? -1 : 0;
 		});
 	}
 

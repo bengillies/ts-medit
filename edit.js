@@ -268,10 +268,16 @@
 		}
 
 		function matchTags(tagString) {
+			if (!tagString) { return []; }
 			var matches = allTags.filter(function(tag) {
 				return !!~tag.toLowerCase().indexOf(tagString.toLowerCase());
 			});
-			matches = matches.slice(0, 8);
+			matches = matches.sort(function(a, b) {
+				var first = a.toLowerCase().indexOf(tagString),
+					second = b.toLowerCase().indexOf(tagString);
+				return first > second ? 1 : second > first ? -1 :
+					a.length < b.length ? 1 : b.length < a.length ? -1 : 0;
+			}).slice(0, 8);
 			if (tagString) {
 				matches.push(tagString);
 			}
@@ -475,8 +481,8 @@
 		}
 
 		return function() {
-			$target.on('dragEnter', cancelDefaults)
-				.on('dragOver', cancelDefaults)
+			$target.on('dragenter', cancelDefaults)
+				.on('dragover', cancelDefaults)
 				.on('drop', fileDrop);
 		}
 	}());
