@@ -134,7 +134,7 @@ var parser = (function() {
 		var cursor = ev.target.selectionStart,
 			txt = $el.val(),
 			current = txt.charAt(cursor);
-		switch (ev.keyCode) {
+		switch (ev.which) {
 		case 91: // [
 			insertBrackets(current, cursor, ']');
 			break;
