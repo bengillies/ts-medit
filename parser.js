@@ -178,6 +178,15 @@ var parser = (function() {
 		on = false;
 	}
 
+	function boundRight(leftPos) {
+		// shift the popup left a bit if it's too close to the edge of the screen
+		var maxRight = $(window).width() - 5,
+			currentRight = leftPos + $popup.width();
+
+		return (currentRight > maxRight) ?
+			leftPos - (currentRight - maxRight) : leftPos;
+	}
+
 	function positionPopup(match, cursor) {
 		var position;
 
@@ -185,7 +194,7 @@ var parser = (function() {
 
 		position = $el.textareaHelper('caretPos');
 		$popup.css('top', position.top + $el.offset().top + lineHeight)
-			.css('left', position.left + $el.offset().left);
+			.css('left', boundRight(position.left + $el.offset().left));
 
 		$el[0].setSelectionRange(cursor, cursor);
 	}

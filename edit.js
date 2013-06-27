@@ -289,9 +289,18 @@
 			return $sandbox.outerWidth() + $tags.offset().left + 5;
 		}
 
+		function boundRight(leftPos) {
+			// shift the popup left a bit if it's too close to the edge of the screen
+			var maxRight = $(window).width() - 5,
+				currentRight = leftPos + $popup.width();
+
+			return (currentRight > maxRight) ?
+				leftPos - (currentRight - maxRight) : leftPos;
+		}
+
 		function positionPopup(tagString, tagStart) {
 			$popup.css('top', $tags.position().top - $popup.outerHeight() + 1)
-				.css('left', getLeftPos(tagString.slice(0, tagStart)));
+				.css('left', boundRight(getLeftPos(tagString.slice(0, tagStart))));
 		}
 
 		function stop() {
